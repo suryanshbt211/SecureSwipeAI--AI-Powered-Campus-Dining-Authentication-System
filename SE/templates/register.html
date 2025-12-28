@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureSwipe AI - Registration</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .camera-section {
+            margin: 35px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-radius: 20px;
+            border: 2px dashed #e5e7eb;
+        }
+
+        .camera-section h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .camera-container {
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 20px;
+            background: #000;
+            margin: 0 auto;
+            display: block;
+            transform: scaleX(-1);
+        }
+
+        .capture-btn {
+            width: 100%;
+            max-width: 640px;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 15px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .capture-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .capture-btn:disabled {
+            background: #e5e7eb;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .captured-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .image-preview {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid #e5e7eb;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-preview:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview .remove-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.5);
+        }
+
+        .status {
+            text-align: center;
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .status.info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border: 2px solid #60a5fa;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 2px solid #f87171;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 22px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 35px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+        }
+
+        .submit-btn:disabled {
+            background: #e5e7eb;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .submit-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .links a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .progress-indicator {
+            margin-top: 15px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Image capture animation */
+        .image-preview.capturing {
+            animation: captureFlash 0.3s ease-out;
+        }
+
+        @keyframes captureFlash {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); filter: brightness(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        /* Enhanced capture button */
+        .capture-btn {
+            position: relative;
+        }
+
+        .capture-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 New Registration</h1>
+        <p class="subtitle">Register for SecureSwipe AI Campus Dining</p>
+
+        <div id="status" class="status info">
+            Please fill in your details and capture at least 3 face images from different angles.
+        </div>
+
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="university_id">🏫 University ID *</label>
+                <input type="text" id="university_id" name="university_id" required placeholder="Enter your university ID">
+            </div>
+
+            <div class="form-group">
+                <label for="name">👤 Full Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">📧 Email *</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+            </div>
+
+            <div class="camera-section">
+                <h3>📸 Face Images (Minimum 3 required)</h3>
+                <div class="camera-container">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                </div>
+                <button type="button" class="capture-btn" onclick="captureImage()">
+                    📸 Capture Image
+                </button>
+                <div class="progress-indicator" id="progressIndicator"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="captured-images" id="capturedImages"></div>
+
+            <!-- Toast Notification Container -->
+            <div id="toastContainer"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                <span>✨ Register Account (8 Meal Swipes Included)</span>
+            </button>
+        </form>
+
+        <div class="links">
+            <a href="/login">← Back to Login</a>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const capturedImages = [];
+        let stream = null;
+
+        async function startCamera() {
+            try {
+                // Check if browser supports camera API
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    updateStatus('Your browser does not support camera access. Please use Chrome, Edge, or Firefox.', 'error');
+                    return;
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: 'user', 
+                        width: { ideal: 640 }, 
+                        height: { ideal: 480 } 
+                    }
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                let errorMsg = '❌ Error accessing camera. ';
+                
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    errorMsg += 'Please allow camera permissions in your browser settings and refresh the page.';
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                    errorMsg += 'No camera found. Please connect a camera device.';
+                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                    errorMsg += 'Camera is being used by another application. Please close other apps using the camera.';
+                } else {
+                    errorMsg += 'Please check your browser settings and ensure camera access is allowed.';
+                }
+                
+                updateStatus(errorMsg, 'error');
+            }
+        }
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function captureImage() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0);
+            
+            const imageData = canvas.toDataURL('image/jpeg', 0.8);
+            capturedImages.push(imageData);
+            
+            // Flash animation
+            const container = document.getElementById('capturedImages');
+            if (container.children.length > 0) {
+                const lastChild = container.lastElementChild;
+                if (lastChild) {
+                    lastChild.classList.add('capturing');
+                    setTimeout(() => lastChild.classList.remove('capturing'), 300);
+                }
+            }
+            
+            updateImagePreview();
+            
+            const remaining = Math.max(0, 3 - capturedImages.length);
+            updateStatus(`✅ Captured ${capturedImages.length} image(s). ${remaining > 0 ? remaining + ' more needed.' : 'Ready to register!'}`, remaining === 0 ? 'success' : 'info');
+            showToast(`📸 Image ${capturedImages.length} captured! ${remaining > 0 ? `${remaining} more needed.` : 'Ready to register!'}`, remaining === 0 ? 'success' : 'info');
+        }
+
+        function updateImagePreview() {
+            const container = document.getElementById('capturedImages');
+            const progressDiv = document.getElementById('progressIndicator');
+            const progressFill = document.getElementById('progressFill');
+            container.innerHTML = '';
+
+            capturedImages.forEach((imgData, index) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview';
+                div.innerHTML = `
+                    <img src="${imgData}" alt="Captured ${index + 1}">
+                    <button type="button" class="remove-btn" onclick="removeImage(${index})" title="Remove image">×</button>
+                `;
+                container.appendChild(div);
+            });
+
+            const remaining = Math.max(0, 3 - capturedImages.length);
+            const progress = (capturedImages.length / 3) * 100;
+            
+            if (capturedImages.length > 0) {
+                progressDiv.textContent = `📊 Progress: ${capturedImages.length}/3 images captured${remaining > 0 ? ` (${remaining} more needed)` : ' ✓'}`;
+                progressFill.style.width = `${progress}%`;
+            } else {
+                progressDiv.textContent = '';
+                progressFill.style.width = '0%';
+            }
+
+            // Enable submit button if at least 3 images
+            const submitBtn = document.getElementById('submitBtn');
+            if (capturedImages.length >= 3) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.6';
+            }
+        }
+
+        function removeImage(index) {
+            capturedImages.splice(index, 1);
+            updateImagePreview();
+            const remaining = Math.max(0, 3 - capturedImages.length);
+            updateStatus(`Captured ${capturedImages.length} image(s). ${remaining > 0 ? remaining + ' more needed.' : 'Ready to register!'}`, remaining === 0 ? 'success' : 'info');
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (capturedImages.length < 3) {
+                updateStatus('❌ Please capture at least 3 face images.', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span><span class="spinner"></span> Registering...</span>';
+            showToast('⏳ Registering your account...', 'info');
+
+            const formData = {
+                university_id: document.getElementById('university_id').value,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                images: capturedImages
+            };
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    updateStatus('✅ ' + data.message + ' Redirecting to login...', 'success');
+                    showToast('✅ ' + data.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    updateStatus('❌ ' + (data.error || 'Registration failed'), 'error');
+                    showToast('❌ ' + (data.error || 'Registration failed'), 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>✨ Register Account (8 Meal Swipes Included)</span>';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                updateStatus('❌ Error during registration. Please try again.', 'error');
+                showToast('❌ Error during registration. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>✨ Register Account (8 Meal Swipes Included)</span>';
+            }
+        });
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} show`;
+            
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Start camera on load
+        startCamera();
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>

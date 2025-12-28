@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureSwipe AI - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(255, 255, 255, 0.5);
+            padding: 50px 40px;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        .camera-container {
+            position: relative;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+
+        #video {
+            width: 100%;
+            display: block;
+            border-radius: 20px;
+            transform: scaleX(-1);
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .status {
+            text-align: center;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .status.detecting {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border: 2px solid #fbbf24;
+        }
+
+        .status.recognizing {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border: 2px solid #60a5fa;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 2px solid #10b981;
+            animation: none;
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 2px solid #f87171;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #e5e7eb;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .help-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+        }
+
+        .help-box strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .help-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .help-box li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .help-box li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .links a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .confidence {
+            text-align: center;
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Camera overlay for face detection */
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        .face-box {
+            position: absolute;
+            border: 3px solid #10b981;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Enhanced camera container with glow effect */
+        .camera-container {
+            position: relative;
+        }
+
+        .camera-container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .camera-container:hover::before {
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍽️ SecureSwipe AI</h1>
+        <p class="subtitle">Contactless Campus Dining Authentication</p>
+
+        <div class="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas"></canvas>
+            <div class="camera-overlay" id="cameraOverlay"></div>
+        </div>
+
+        <div id="status" class="status detecting">
+            Starting camera...
+        </div>
+
+        <button id="recognizeBtn" class="btn" onclick="recognizeFace()">
+            <span>🔐 Recognize Face</span>
+        </button>
+
+        <div class="confidence" id="confidence"></div>
+
+        <!-- Toast Notification Container -->
+        <div id="toastContainer"></div>
+
+        <div class="help-box">
+            <strong>📷 Camera Troubleshooting</strong>
+            <ul>
+                <li>Click the camera icon in your browser's address bar to allow permissions</li>
+                <li>Make sure no other app is using your camera</li>
+                <li>Try refreshing the page after allowing permissions</li>
+                <li>Use Chrome, Edge, or Firefox for best compatibility</li>
+            </ul>
+        </div>
+
+        <div class="links">
+            <a href="/register">New Registration</a>
+            <a href="/admin">Admin Login</a>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const statusDiv = document.getElementById('status');
+        const recognizeBtn = document.getElementById('recognizeBtn');
+        const confidenceDiv = document.getElementById('confidence');
+
+        let stream = null;
+        let isRecognizing = false;
+
+        // Check if admin access was attempted
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === '1') {
+            const helpBox = document.querySelector('.help-box');
+            helpBox.innerHTML = `
+                <strong>🔐 Admin Access Required</strong>
+                <ul>
+                    <li>To access the Admin Panel, you need to log in with an admin account</li>
+                    <li>The default admin account has University ID: <strong>ADMIN001</strong></li>
+                    <li>You must first register the admin account using face recognition</li>
+                    <li>Go to "New Registration" and register with University ID: ADMIN001</li>
+                    <li>After registration, log in with face recognition to access admin panel</li>
+                </ul>
+            `;
+            helpBox.style.background = 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)';
+            helpBox.style.border = '2px solid #60a5fa';
+            helpBox.style.color = '#1e40af';
+        }
+
+        // Start camera
+        async function startCamera() {
+            try {
+                // Check if browser supports camera API
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    updateStatus('Your browser does not support camera access. Please use Chrome, Edge, or Firefox.', 'error');
+                    return;
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: 'user', 
+                        width: { ideal: 640 }, 
+                        height: { ideal: 480 } 
+                    }
+                });
+                video.srcObject = stream;
+                updateStatus('✅ Camera ready. Click "Recognize Face" to login.', 'detecting');
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                let errorMsg = '❌ Error accessing camera. ';
+                
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    errorMsg += 'Please allow camera permissions in your browser settings and refresh the page.';
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                    errorMsg += 'No camera found. Please connect a camera device.';
+                } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                    errorMsg += 'Camera is being used by another application. Please close other apps using the camera.';
+                } else {
+                    errorMsg += 'Please check your browser settings and ensure camera access is allowed.';
+                }
+                
+                updateStatus(errorMsg, 'error');
+            }
+        }
+
+        function updateStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function captureFrame() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0);
+            return canvas.toDataURL('image/jpeg', 0.8);
+        }
+
+        async function recognizeFace() {
+            if (isRecognizing) return;
+            
+            isRecognizing = true;
+            recognizeBtn.disabled = true;
+            recognizeBtn.innerHTML = '<span><span class="spinner"></span> Processing...</span>';
+            updateStatus('🔍 Processing face recognition...', 'recognizing');
+            showToast('Processing face recognition...', 'info');
+            confidenceDiv.textContent = '';
+
+            try {
+                const imageData = captureFrame();
+                
+                const response = await fetch('/api/recognize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: imageData })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    updateStatus(`✅ Welcome, ${data.name}! Redirecting...`, 'success');
+                    confidenceDiv.textContent = `Confidence: ${data.confidence.toFixed(1)}%`;
+                    showToast(`✅ Welcome, ${data.name}!`, 'success');
+                    
+                    // Redirect to dashboard after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    updateStatus(data.error || 'Face not recognized', 'error');
+                    if (data.confidence) {
+                        confidenceDiv.textContent = `Confidence: ${data.confidence.toFixed(1)}% (Too low)`;
+                    }
+                    showToast(data.error || 'Face not recognized. Please try again.', 'error');
+                    recognizeBtn.innerHTML = '<span>🔐 Recognize Face</span>';
+                }
+            } catch (error) {
+                console.error('Recognition error:', error);
+                updateStatus('❌ Error during recognition. Please try again.', 'error');
+                showToast('❌ Error during recognition. Please try again.', 'error');
+                recognizeBtn.innerHTML = '<span>🔐 Recognize Face</span>';
+            } finally {
+                isRecognizing = false;
+                recognizeBtn.disabled = false;
+            }
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} show`;
+            
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Start camera on load
+        startCamera();
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>

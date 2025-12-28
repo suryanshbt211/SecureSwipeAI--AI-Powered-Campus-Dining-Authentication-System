@@ -1,0 +1,6 @@
+user_id,university_id,name,email,balance,registered_faces,role,created_at
+admin-001,ADMIN001,Admin User,admin@university.edu,0.0,0,admin,2025-10-31T23:00:07.771468
+user-639b549f,900428564,Taha Sarwat,sarwt01@pfw.edu,6.0,4,user,2025-10-31T23:16:09.283953
+user-569194c6,k;lk,jkl,jkl@pfw.edu,8.0,3,user,2025-12-05T22:31:57.684199
+user-dd5e34f7,1234,qwerty,qwerty@pfw.edu,5.0,3,user,2025-12-05T22:51:19.656023
+user-0c698cd8,abc12,abc,abc@pfw.edu,0.0,3,user,2025-12-05T22:56:04.932146

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureSwipe AI - Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 35px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info .name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .user-info .id {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            margin-left: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            color: #6b7280;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .card .value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .card-balance .value {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card .value:not(.card-balance .value) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .transactions-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .transactions-section h2 {
+            color: #1f2937;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .transaction-item {
+            padding: 20px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .transaction-item:hover {
+            background: #f9fafb;
+            transform: translateX(5px);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .transaction-amount.positive {
+            color: #10b981;
+        }
+
+        .transaction-amount.negative {
+            color: #ef4444;
+        }
+
+        .transaction-date {
+            color: #9ca3af;
+            font-size: 0.85rem;
+        }
+
+        .swipe-btn {
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swipe-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .swipe-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .swipe-btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+        }
+
+        .swipe-btn:active:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .swipe-btn:disabled {
+            background: #e5e7eb;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .swipe-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .alert {
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Enhanced card animations */
+        .card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        /* Balance animation */
+        .card-balance .value {
+            transition: transform 0.3s ease;
+        }
+
+        .card-balance:hover .value {
+            transform: scale(1.1);
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pulse animation for low balance */
+        .card-balance.low-balance {
+            animation: pulse-warning 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); }
+            50% { box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🍽️ SecureSwipe AI</h1>
+            </div>
+            <div>
+                <div class="user-info">
+                    <div class="name" id="userName">Loading...</div>
+                    <div class="id" id="userId">Loading...</div>
+                </div>
+                <div style="margin-top: 12px;">
+                    <a href="/admin" class="btn btn-primary" id="adminBtn" style="display: none;">🔐 Admin</a>
+                    <button onclick="logout()" class="btn btn-danger">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Toast Notification Container -->
+        <div id="toastContainer"></div>
+
+        <div class="cards">
+            <div class="card card-balance">
+                <h3>💰 Remaining Balance</h3>
+                <div class="value" id="balance">0</div>
+                <p>Meal swipes remaining</p>
+            </div>
+            <div class="card">
+                <h3>📊 Total Transactions</h3>
+                <div class="value" id="totalTransactions">0</div>
+                <p>All-time transactions</p>
+            </div>
+            <div class="card" id="lastTransactionCard">
+                <h3>🕐 Last Transaction</h3>
+                <div class="value" style="font-size: 1.4rem; line-height: 1.4;" id="lastTransaction">No transactions</div>
+                <p id="lastTransactionDate"></p>
+            </div>
+        </div>
+
+        <div class="card">
+            <button class="swipe-btn" id="swipeBtn" onclick="processSwipe()">
+                <span>🎯 Use Meal Swipe</span>
+            </button>
+        </div>
+
+        <div class="transactions-section">
+            <h2>📜 Recent Transactions</h2>
+            <div id="transactionsList" class="loading">Loading transactions...</div>
+        </div>
+    </div>
+
+    <script>
+        let userData = null;
+
+        async function loadDashboard() {
+            try {
+                const response = await fetch('/api/user/profile');
+                const data = await response.json();
+
+                if (data.success) {
+                    userData = data.user;
+                    displayUserInfo(data.user);
+                    displayTransactions(data.transactions);
+                    
+                    // Check if user is admin
+                    const adminResponse = await fetch('/api/admin/stats');
+                    if (adminResponse.ok) {
+                        const adminData = await adminResponse.json();
+                        if (adminData.success) {
+                            document.getElementById('adminBtn').style.display = 'inline-block';
+                        }
+                    }
+                } else {
+                    if (data.error === 'Not authenticated') {
+                        window.location.href = '/login';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function displayUserInfo(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userId').textContent = `ID: ${user.university_id}`;
+            
+            // Animate balance change
+            const balanceEl = document.getElementById('balance');
+            const oldBalance = parseInt(balanceEl.textContent) || 0;
+            const newBalance = user.balance;
+            
+            if (oldBalance !== newBalance) {
+                balanceEl.style.transform = 'scale(1.2)';
+                balanceEl.style.color = newBalance < oldBalance ? '#ef4444' : '#10b981';
+                setTimeout(() => {
+                    balanceEl.style.transform = 'scale(1)';
+                    balanceEl.style.color = '';
+                }, 300);
+            }
+            
+            balanceEl.textContent = newBalance;
+            document.getElementById('totalTransactions').textContent = userData.totalTransactions || 0;
+
+            // Update swipe button and card styling
+            const swipeBtn = document.getElementById('swipeBtn');
+            const balanceCard = document.querySelector('.card-balance');
+            
+            if (user.balance <= 0) {
+                swipeBtn.disabled = true;
+                swipeBtn.innerHTML = '<span>❌ No Balance Available</span>';
+                balanceCard.classList.add('low-balance');
+            } else {
+                swipeBtn.disabled = false;
+                swipeBtn.innerHTML = `<span>🎯 Use Meal Swipe (${user.balance} remaining)</span>`;
+                balanceCard.classList.remove('low-balance');
+            }
+        }
+
+        function displayTransactions(transactions) {
+            const container = document.getElementById('transactionsList');
+            
+            if (transactions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; font-size: 1rem;">No transactions yet.</p>';
+                return;
+            }
+
+            let html = '';
+            transactions.forEach(txn => {
+                const date = new Date(txn.timestamp);
+                const amount = txn.amount > 0 ? `+${txn.amount}` : txn.amount;
+                const amountClass = txn.amount > 0 ? 'positive' : 'negative';
+                const icon = txn.amount > 0 ? '➕' : '➖';
+                
+                html += `
+                    <div class="transaction-item">
+                        <div>
+                            <div class="transaction-type">${icon} ${txn.transaction_type.replace('_', ' ').toUpperCase()}</div>
+                            <div class="transaction-date">${date.toLocaleString()}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="transaction-amount ${amountClass}">${amount}</div>
+                            <div class="transaction-date">Balance: ${txn.balance_after}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Update last transaction
+            if (transactions.length > 0) {
+                const last = transactions[0];
+                const date = new Date(last.timestamp);
+                document.getElementById('lastTransaction').textContent = 
+                    `${last.transaction_type.replace('_', ' ').toUpperCase()} (${last.amount > 0 ? '+' : ''}${last.amount})`;
+                document.getElementById('lastTransactionDate').textContent = date.toLocaleString();
+            }
+
+            document.getElementById('totalTransactions').textContent = transactions.length;
+        }
+
+        async function processSwipe() {
+            const swipeBtn = document.getElementById('swipeBtn');
+            swipeBtn.disabled = true;
+            swipeBtn.innerHTML = '<span><span class="spinner"></span> Processing...</span>';
+            showToast('⏳ Processing meal swipe...', 'info');
+
+            try {
+                const response = await fetch('/api/transaction/swipe', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✅ Meal swipe successful! Remaining balance: ${data.balance}`, 'success');
+                    showToast(`✅ Meal swipe successful! Balance: ${data.balance}`, 'success');
+                    userData.balance = data.balance;
+                    displayUserInfo(userData);
+                    loadDashboard(); // Reload to get updated transactions
+                } else {
+                    showAlert(`❌ ${data.error || 'Swipe failed'}`, 'error');
+                    showToast(`❌ ${data.error || 'Swipe failed'}`, 'error');
+                    swipeBtn.disabled = false;
+                    swipeBtn.innerHTML = `<span>🎯 Use Meal Swipe (${userData.balance} remaining)</span>`;
+                }
+            } catch (error) {
+                console.error('Swipe error:', error);
+                showAlert('❌ Error processing swipe. Please try again.', 'error');
+                showToast('❌ Error processing swipe. Please try again.', 'error');
+                swipeBtn.disabled = false;
+                swipeBtn.innerHTML = `<span>🎯 Use Meal Swipe (${userData.balance} remaining)</span>`;
+            }
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            container.innerHTML = '';
+            container.appendChild(alert);
+
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                alert.style.transform = 'translateX(-20px)';
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} show`;
+            
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+    </script>
+</body>
+</html>

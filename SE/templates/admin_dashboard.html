@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SecureSwipe AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px 35px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            margin-left: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-section h2 {
+            color: #1f2937;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .search-section {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-section input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-section input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-section {
+            background: #f9fafb;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .form-section h3 {
+            color: #374151;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .status {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 2px solid #f87171;
+        }
+
+        .user-result {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #e5e7eb;
+            display: none;
+        }
+
+        .user-result.show {
+            display: block;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .user-result h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .info-item label {
+            display: block;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .info-item span {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .swipe-control {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .swipe-control input {
+            width: 100px;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .toast.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        /* Enhanced user result card */
+        .user-result {
+            transition: all 0.3s ease;
+        }
+
+        .user-result.show {
+            animation: slideInUp 0.4s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced info items */
+        .info-item {
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Enhanced buttons */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Search input enhancement */
+        .search-section input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Admin Dashboard - SecureSwipe AI</h1>
+            <div>
+                <button onclick="logout()" class="btn btn-danger">🚪 Logout</button>
+            </div>
+        </div>
+
+        <!-- Toast Notification Container -->
+        <div id="toastContainer"></div>
+
+        <!-- Manage Users Section -->
+        <div class="content-section">
+            <h2>👥 Manage Users</h2>
+            
+            <div class="search-section">
+                <input type="text" id="searchUserInput" placeholder="🔍 Search by Name or University ID" onkeyup="if(event.key==='Enter') searchUser()">
+                <button class="btn btn-primary" onclick="searchUser()">🔍 Search</button>
+            </div>
+
+            <div id="userStatus" class="status"></div>
+            <div id="userResult" class="user-result"></div>
+
+            <div class="form-section">
+                <h3>➕ Add New User</h3>
+                <div id="addUserStatus" class="status"></div>
+                <form id="addUserForm" onsubmit="addUser(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newUniversityId">University ID *</label>
+                            <input type="text" id="newUniversityId" required placeholder="e.g., 900428564">
+                        </div>
+                        <div class="form-group">
+                            <label for="newUserName">Name *</label>
+                            <input type="text" id="newUserName" required placeholder="e.g., John Doe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newUserEmail">Email *</label>
+                        <input type="email" id="newUserEmail" required placeholder="e.g., john@university.edu">
+                    </div>
+                    <div class="form-group">
+                        <label for="newUserBalance">Initial Meal Swipes</label>
+                        <input type="number" id="newUserBalance" value="8" min="0" placeholder="Default: 8">
+                    </div>
+                    <button type="submit" class="btn btn-success">➕ Add User</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>🗑️ Delete User</h3>
+                <div id="deleteUserStatus" class="status"></div>
+                <form id="deleteUserForm" onsubmit="deleteUserBySearch(event)">
+                    <div class="form-group">
+                        <label for="deleteUserSearch">Search by Name or University ID *</label>
+                        <input type="text" id="deleteUserSearch" required placeholder="Enter name or University ID to delete">
+                    </div>
+                    <button type="submit" class="btn btn-danger">🗑️ Delete User</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Manage Meal Swipes Section -->
+        <div class="content-section">
+            <h2>🍽️ Manage Meal Swipes</h2>
+            
+            <div class="search-section">
+                <input type="text" id="searchSwipeUserInput" placeholder="🔍 Search by Name or University ID" onkeyup="if(event.key==='Enter') searchSwipeUser()">
+                <button class="btn btn-primary" onclick="searchSwipeUser()">🔍 Search</button>
+            </div>
+
+            <div id="swipeStatus" class="status"></div>
+            <div id="swipeUserResult" class="user-result"></div>
+
+            <div class="form-section">
+                <h3>➕ Add Meal Swipes</h3>
+                <div id="addSwipeStatus" class="status"></div>
+                <form id="addSwipeForm" onsubmit="addMealSwipesBySearch(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="addSwipeSearch">Search by Name or University ID *</label>
+                            <input type="text" id="addSwipeSearch" required placeholder="Enter name or University ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="addSwipeAmount">Number of Swipes *</label>
+                            <input type="number" id="addSwipeAmount" value="1" min="1" required placeholder="Amount">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">➕ Add Meal Swipes</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h3>➖ Delete Meal Swipes</h3>
+                <div id="deleteSwipeStatus" class="status"></div>
+                <form id="deleteSwipeForm" onsubmit="deleteMealSwipesBySearch(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="deleteSwipeSearch">Search by Name or University ID *</label>
+                            <input type="text" id="deleteSwipeSearch" required placeholder="Enter name or University ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="deleteSwipeAmount">Number of Swipes *</label>
+                            <input type="number" id="deleteSwipeAmount" value="1" min="1" required placeholder="Amount">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger">➖ Delete Meal Swipes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUserId = null;
+        let currentSwipeUserId = null;
+
+        function showStatus(elementId, message, type) {
+            const statusDiv = document.getElementById(elementId);
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type} show`;
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} show`;
+            
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        async function searchUser() {
+            const searchTerm = document.getElementById('searchUserInput').value.trim();
+            if (!searchTerm) {
+                showStatus('userStatus', 'Please enter a name or University ID to search', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/search-user?q=${encodeURIComponent(searchTerm)}`);
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    currentUserId = data.user.user_id;
+                    displayUserResult(data.user, 'userResult');
+                    showStatus('userStatus', '✅ User found!', 'success');
+                    showToast('✅ User found!', 'success');
+                } else {
+                    document.getElementById('userResult').classList.remove('show');
+                    showStatus('userStatus', data.error || 'User not found', 'error');
+                    showToast(data.error || 'User not found', 'error');
+                    currentUserId = null;
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showStatus('userStatus', '❌ Error searching for user', 'error');
+            }
+        }
+
+        function displayUserResult(user, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <h4>👤 User Details</h4>
+                <div class="user-info">
+                    <div class="info-item">
+                        <label>University ID</label>
+                        <span>${user.university_id}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Name</label>
+                        <span>${user.name}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email</label>
+                        <span>${user.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Balance</label>
+                        <span>${user.balance} swipes</span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-danger" onclick="deleteUser('${user.user_id}')">🗑️ Delete User</button>
+                </div>
+            `;
+            container.classList.add('show');
+        }
+
+        async function addUser(event) {
+            event.preventDefault();
+            
+            const universityId = document.getElementById('newUniversityId').value.trim();
+            const name = document.getElementById('newUserName').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const balance = parseInt(document.getElementById('newUserBalance').value) || 8;
+
+            try {
+                const response = await fetch('/api/admin/add-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        university_id: universityId,
+                        name: name,
+                        email: email,
+                        balance: balance
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('addUserStatus', `✅ User added successfully! User ID: ${data.user_id}`, 'success');
+                    showToast(`✅ User added successfully!`, 'success');
+                    document.getElementById('addUserForm').reset();
+                    document.getElementById('newUserBalance').value = 8;
+                } else {
+                    showStatus('addUserStatus', data.error || 'Failed to add user', 'error');
+                    showToast(data.error || 'Failed to add user', 'error');
+                }
+            } catch (error) {
+                console.error('Add user error:', error);
+                showStatus('addUserStatus', '❌ Error adding user', 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('userStatus', '✅ User deleted successfully!', 'success');
+                    showToast('✅ User deleted successfully!', 'success');
+                    document.getElementById('userResult').classList.remove('show');
+                    document.getElementById('searchUserInput').value = '';
+                    currentUserId = null;
+                } else {
+                    showStatus('userStatus', data.error || 'Failed to delete user', 'error');
+                    showToast(data.error || 'Failed to delete user', 'error');
+                }
+            } catch (error) {
+                console.error('Delete user error:', error);
+                showStatus('userStatus', '❌ Error deleting user', 'error');
+            }
+        }
+
+        async function deleteUserBySearch(event) {
+            event.preventDefault();
+            
+            const searchTerm = document.getElementById('deleteUserSearch').value.trim();
+            if (!searchTerm) {
+                showStatus('deleteUserStatus', 'Please enter a name or University ID to search', 'error');
+                return;
+            }
+
+            try {
+                // First search for the user
+                const searchResponse = await fetch(`/api/admin/search-user?q=${encodeURIComponent(searchTerm)}`);
+                const searchData = await searchResponse.json();
+
+                if (!searchData.success || !searchData.user) {
+                    showStatus('deleteUserStatus', searchData.error || 'User not found', 'error');
+                    return;
+                }
+
+                const userId = searchData.user.user_id;
+                const userName = searchData.user.name;
+
+                if (!confirm(`Are you sure you want to delete user "${userName}" (${searchData.user.university_id})? This action cannot be undone.`)) {
+                    return;
+                }
+
+                const response = await fetch('/api/admin/delete-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('deleteUserStatus', '✅ User deleted successfully!', 'success');
+                    document.getElementById('deleteUserForm').reset();
+                } else {
+                    showStatus('deleteUserStatus', data.error || 'Failed to delete user', 'error');
+                }
+            } catch (error) {
+                console.error('Delete user error:', error);
+                showStatus('deleteUserStatus', '❌ Error deleting user', 'error');
+            }
+        }
+
+        async function searchSwipeUser() {
+            const searchTerm = document.getElementById('searchSwipeUserInput').value.trim();
+            if (!searchTerm) {
+                showStatus('swipeStatus', 'Please enter a name or University ID to search', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/admin/search-user?q=${encodeURIComponent(searchTerm)}`);
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    currentSwipeUserId = data.user.user_id;
+                    displaySwipeUserResult(data.user);
+                    showStatus('swipeStatus', '✅ User found!', 'success');
+                } else {
+                    document.getElementById('swipeUserResult').classList.remove('show');
+                    showStatus('swipeStatus', data.error || 'User not found', 'error');
+                    currentSwipeUserId = null;
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showStatus('swipeStatus', '❌ Error searching for user', 'error');
+            }
+        }
+
+        function displaySwipeUserResult(user) {
+            const container = document.getElementById('swipeUserResult');
+            container.innerHTML = `
+                <h4>👤 User Details</h4>
+                <div class="user-info">
+                    <div class="info-item">
+                        <label>University ID</label>
+                        <span>${user.university_id}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Name</label>
+                        <span>${user.name}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Email</label>
+                        <span>${user.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Current Balance</label>
+                        <span>${user.balance} swipes</span>
+                    </div>
+                </div>
+                <div class="swipe-control">
+                    <input type="number" id="swipeAmount" value="1" min="1" placeholder="Amount">
+                    <button class="btn btn-success" onclick="addMealSwipes('${user.user_id}')">➕ Add Swipes</button>
+                    <button class="btn btn-danger" onclick="deleteMealSwipes('${user.user_id}')">➖ Remove Swipes</button>
+                </div>
+            `;
+            container.classList.add('show');
+        }
+
+        async function addMealSwipes(userId) {
+            const amount = parseInt(document.getElementById('swipeAmount').value) || 1;
+            if (amount <= 0) {
+                showStatus('swipeStatus', 'Please enter a valid amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/add-meal-swipes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('swipeStatus', `✅ Added ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    showToast(`✅ Added ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    // Refresh user data
+                    setTimeout(() => {
+                        if (currentSwipeUserId) {
+                            searchSwipeUser();
+                        }
+                    }, 1000);
+                } else {
+                    showStatus('swipeStatus', data.error || 'Failed to add meal swipes', 'error');
+                    showToast(data.error || 'Failed to add meal swipes', 'error');
+                }
+            } catch (error) {
+                console.error('Add swipes error:', error);
+                showStatus('swipeStatus', '❌ Error adding meal swipes', 'error');
+            }
+        }
+
+        async function deleteMealSwipes(userId) {
+            const amount = parseInt(document.getElementById('swipeAmount').value) || 1;
+            if (amount <= 0) {
+                showStatus('swipeStatus', 'Please enter a valid amount', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/delete-meal-swipes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('swipeStatus', `✅ Removed ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    showToast(`✅ Removed ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    // Refresh user data
+                    setTimeout(() => {
+                        if (currentSwipeUserId) {
+                            searchSwipeUser();
+                        }
+                    }, 1000);
+                } else {
+                    showStatus('swipeStatus', data.error || 'Failed to remove meal swipes', 'error');
+                    showToast(data.error || 'Failed to remove meal swipes', 'error');
+                }
+            } catch (error) {
+                console.error('Delete swipes error:', error);
+                showStatus('swipeStatus', '❌ Error removing meal swipes', 'error');
+            }
+        }
+
+        async function addMealSwipesBySearch(event) {
+            event.preventDefault();
+            
+            const searchTerm = document.getElementById('addSwipeSearch').value.trim();
+            const amount = parseInt(document.getElementById('addSwipeAmount').value) || 1;
+
+            if (!searchTerm) {
+                showStatus('addSwipeStatus', 'Please enter a name or University ID to search', 'error');
+                return;
+            }
+
+            if (amount <= 0) {
+                showStatus('addSwipeStatus', 'Please enter a valid amount', 'error');
+                return;
+            }
+
+            try {
+                // First search for the user
+                const searchResponse = await fetch(`/api/admin/search-user?q=${encodeURIComponent(searchTerm)}`);
+                const searchData = await searchResponse.json();
+
+                if (!searchData.success || !searchData.user) {
+                    showStatus('addSwipeStatus', searchData.error || 'User not found', 'error');
+                    return;
+                }
+
+                const userId = searchData.user.user_id;
+
+                const response = await fetch('/api/admin/add-meal-swipes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('addSwipeStatus', `✅ Added ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    document.getElementById('addSwipeForm').reset();
+                    document.getElementById('addSwipeAmount').value = 1;
+                } else {
+                    showStatus('addSwipeStatus', data.error || 'Failed to add meal swipes', 'error');
+                }
+            } catch (error) {
+                console.error('Add swipes error:', error);
+                showStatus('addSwipeStatus', '❌ Error adding meal swipes', 'error');
+            }
+        }
+
+        async function deleteMealSwipesBySearch(event) {
+            event.preventDefault();
+            
+            const searchTerm = document.getElementById('deleteSwipeSearch').value.trim();
+            const amount = parseInt(document.getElementById('deleteSwipeAmount').value) || 1;
+
+            if (!searchTerm) {
+                showStatus('deleteSwipeStatus', 'Please enter a name or University ID to search', 'error');
+                return;
+            }
+
+            if (amount <= 0) {
+                showStatus('deleteSwipeStatus', 'Please enter a valid amount', 'error');
+                return;
+            }
+
+            try {
+                // First search for the user
+                const searchResponse = await fetch(`/api/admin/search-user?q=${encodeURIComponent(searchTerm)}`);
+                const searchData = await searchResponse.json();
+
+                if (!searchData.success || !searchData.user) {
+                    showStatus('deleteSwipeStatus', searchData.error || 'User not found', 'error');
+                    return;
+                }
+
+                const userId = searchData.user.user_id;
+
+                const response = await fetch('/api/admin/delete-meal-swipes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        amount: amount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showStatus('deleteSwipeStatus', `✅ Removed ${amount} meal swipe(s)! New balance: ${data.new_balance}`, 'success');
+                    document.getElementById('deleteSwipeForm').reset();
+                    document.getElementById('deleteSwipeAmount').value = 1;
+                } else {
+                    showStatus('deleteSwipeStatus', data.error || 'Failed to remove meal swipes', 'error');
+                }
+            } catch (error) {
+                console.error('Delete swipes error:', error);
+                showStatus('deleteSwipeStatus', '❌ Error removing meal swipes', 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/admin/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/login';
+            }
+        }
+    </script>
+</body>
+</html>
+
